@@ -1,0 +1,325 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --primary-color: #ff4b4b;
+    --primary-dark: #d43f3f;
+    --bg-color: #fef2f2;
+    --text-color: #333;
+    --white: #ffffff;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --radius: 12px;
+    --success: #2ecc71;
+    --warning: #f1c40f;
+    --danger: #e74c3c;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Layout Utility Classes --- */
+main {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start; /* Changed to flex-start for dashboard layouts */
+    min-height: 100vh;
+}
+
+/* Center content specifically for login/landing */
+body.login-page main {
+    align-items: center;
+}
+
+/* --- Header & Navigation --- */
+.header {
+    height: 70px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    background: var(--white);
+    box-shadow: var(--shadow);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
+
+.header h3 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: var(--radius);
+    transition: background 0.2s;
+}
+
+.profile:hover {
+    background-color: var(--bg-color);
+}
+
+.profile img {
+    width: 35px;
+    height: 35px;
+}
+
+.profile_name {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+/* Profile Dropdown (The "box") */
+#box {
+    position: absolute;
+    top: 80px;
+    right: 20px;
+    background: var(--white);
+    width: 200px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 10px;
+    display: none; /* Controlled by JS */
+    flex-direction: column;
+    z-index: 101;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+#box.active {
+    display: flex;
+}
+
+#box a {
+    text-decoration: none;
+    color: var(--text-color);
+    padding: 10px;
+    border-radius: 8px;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#box a:hover {
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+}
+
+/* --- Landing & Register Page Styling --- */
+.landing-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 40px;
+    margin-top: 60px; /* Offset for header if present, or general spacing */
+}
+
+.left, .right {
+    flex: 1 1 350px;
+    max-width: 500px;
+    padding: 20px;
+}
+
+.left {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.left .logo h2 {
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.left img {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));
+}
+
+.right form {
+    background: var(--white);
+    padding: 40px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    width: 100%;
+    border-top: 5px solid var(--primary-color);
+}
+
+.right h2 {
+    margin-bottom: 1.5rem;
+    color: var(--text-color);
+    font-size: 1.8rem;
+    text-align: center;
+}
+
+.input_area {
+    position: relative;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    transition: all 0.3s ease;
+}
+
+.input_area:focus-within {
+    border-color: var(--primary-color);
+    background-color: var(--white);
+    box-shadow: 0 0 0 3px rgba(255, 75, 75, 0.1);
+}
+
+.input_area input, .input_area select {
+    width: 100%;
+    padding: 15px 15px 15px 45px;
+    border: none;
+    background: transparent;
+    font-size: 1rem;
+    outline: none;
+    color: var(--text-color);
+}
+
+.input_area img {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    opacity: 0.6;
+}
+
+.button_submit {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    margin-top: 10px;
+}
+
+.button_submit:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+/* --- Student Scanner & Status Pages --- */
+.container {
+    width: 100%;
+    max-width: 800px;
+    margin-top: 100px; /* Below header */
+    padding: 20px;
+}
+
+.scanner-card, .status-card {
+    background: var(--white);
+    padding: 30px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    text-align: center;
+    border-top: 5px solid var(--primary-color);
+}
+
+.status-card.success { border-color: var(--success); }
+.status-card.error { border-color: var(--danger); }
+.status-card.warning { border-color: var(--warning); }
+
+.scanner-card h1, .status-card h1 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: var(--text-color);
+}
+
+.status-card h1.msg-success { color: var(--success); }
+.status-card h1.msg-error { color: var(--danger); }
+
+#my-qr-reader {
+    width: 100%;
+    border: 2px dashed #ddd !important;
+    border-radius: var(--radius);
+    padding: 10px;
+}
+
+/* Override html5-qrcode styles */
+#my-qr-reader button {
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    margin-top: 10px;
+}
+
+#my-qr-reader button:hover {
+    background-color: var(--primary-dark);
+}
+
+.status-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    display: block;
+}
+
+/* --- Responsive Media Queries --- */
+@media (max-width: 768px) {
+    .header {
+        padding: 0 15px;
+        height: 60px;
+    }
+
+    .container {
+        margin-top: 80px;
+        padding: 15px;
+    }
+
+    .left {
+        display: none;
+    }
+    
+    .right form {
+        padding: 25px 20px;
+        box-shadow: none;
+        border-top: none;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
