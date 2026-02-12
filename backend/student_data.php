@@ -1,14 +1,13 @@
 <?php
-// Enable error reporting
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 $con = mysqli_connect("localhost", "root", "", "qr_ats");
 
-// Variables to hold status
-$status = ""; // 'success' or 'error'
+
+$status = ""; 
 $message = "";
 $action_button = "";
 
-// 1. Sanitize inputs
+
 $name = mysqli_real_escape_string($con, $_POST['name']);
 $email = mysqli_real_escape_string($con, $_POST['email']);
 $roll_no = mysqli_real_escape_string($con, $_POST['roll_no']);
@@ -18,7 +17,6 @@ $password = mysqli_real_escape_string($con, $_POST['password']);
 try {
     $query = "INSERT INTO student(name, email, roll_no, section, password) VALUES ('$name', '$email', '$roll_no', '$section', '$password')";
     
-    // 2. Attempt Insertion
     if (mysqli_query($con, $query)) {
         $status = "success";
         $message = "Registration successful! You can now log in.";
@@ -27,7 +25,6 @@ try {
 
 } catch (mysqli_sql_exception $e) {
     $status = "error";
-    // 3. Handle Duplicates
     if ($e->getCode() == 1062) { 
         $error_msg = $e->getMessage();
         if (strpos($error_msg, 'email') !== false) {
@@ -40,7 +37,6 @@ try {
     } else {
         $message = "Database error: " . $e->getMessage();
     }
-    // Button to go back and fix without losing data
     $action_button = '<button onclick="history.back()" class="button_submit" style="width:auto; padding: 10px 30px; background-color: #666;">Try Again</button>';
 }
 ?>

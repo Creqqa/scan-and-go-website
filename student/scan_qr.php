@@ -1,6 +1,6 @@
 <?php
 session_start();
-date_default_timezone_set("Asia/Manila"); // Set your timezone
+date_default_timezone_set("Asia/Manila");
 
 if (!isset($_SESSION["student_name"])) {
   header("location:../index.php");
@@ -9,85 +9,93 @@ if (!isset($_SESSION["student_name"])) {
 
 $con = mysqli_connect("localhost", "root", "", "qr_ats");
 
-// Get Data from URL
-$s_id = $_GET['s_id'];
-$s_name = $_GET['s_name'];
-$subject = $_GET['subject'];
-$section = $_GET['section'];
-$roll_no = $_GET['rollno'];
-$qr_date_str = $_GET['date']; // The time the teacher generated the QR
+// Check for Session ID
+if(!isset($_GET['session_id'])){
+    header("location:sc_qr.php"); 
+    exit();
+}
 
-// --- LOGIC: Calculate Status ---
-$qr_time = strtotime($qr_date_str);
-$scan_time = time(); 
-$diff_minutes = ($scan_time - $qr_time) / 60; // Convert seconds to minutes
+$session_id = $_GET['session_id'];
 
-$status = "Present"; 
+// 1. GET SESSION DETAILS
+$query = "SELECT * FROM class_sessions WHERE id='$session_id'";
+$result = mysqli_query($con, $query);
 
-if ($diff_minutes > 60) {
-    $status = "Absent"; // Scanned after 1 hour
-} elseif ($diff_minutes > 30) {
-    $status = "Late";   // Scanned after 30 mins
+if(mysqli_num_rows($result) > 0){
+    $session = mysqli_fetch_assoc($result);
+    
+    // Check Status
+    if($session['status'] == 'closed'){
+        echo "<script>alert('Class Ended. Attendance Closed.'); window.location.href='sc_qr.php';</script>";
+        exit();
+    }
+
+    // 2. CHECK TIME BOUNDARIES
+    $now = date("Y-m-d H:i:s");
+    $start_time = $session['start_time']; // Get when THIS class started
+    $late_limit = $session['late_time_boundary'];
+    $end_limit = $session['end_time_boundary'];
+    
+    if($now > $end_limit){
+        $status = "Absent";
+        $msg = "QR Code Expired. Marked Absent.";
+    } elseif ($now > $late_limit){
+        $status = "Late";
+        $msg = "Marked Late";
+    } else {
+        $status = "Present";
+        $msg = "Marked Present";
+    }
+
+    // Student Info
+    $s_id = $_SESSION['id'];
+    $s_name = $_SESSION['student_name'];
+    $roll_no = $_SESSION['rollno'];
+    $section = $_SESSION['section'];
+    $subject = $session['subject']; 
+
+    // --- 3. AUTO-ENROLLMENT LOGIC ---
+    $check_enroll = "SELECT * FROM subject_enrollment WHERE student_id='$s_id' AND subject='$subject'";
+    if(mysqli_num_rows(mysqli_query($con, $check_enroll)) == 0){
+        $enroll_sql = "INSERT INTO subject_enrollment(student_id, student_name, roll_no, subject, section) 
+                       VALUES('$s_id', '$s_name', '$roll_no', '$subject', '$section')";
+        mysqli_query($con, $enroll_sql);
+    }
+    // ---------------------------------------------
+
+    // 4. FIX: CHECK "ALREADY REGISTERED" FOR *THIS SESSION*
+    // We check if an attendance record exists for this student, this subject, 
+    // AND the time is GREATER THAN OR EQUAL to the Start Time of this session.
+    $check_duplicate = "SELECT * FROM attendance 
+                        WHERE rollno='$roll_no' 
+                        AND subject='$subject' 
+                        AND date >= '$start_time'";
+                        
+    if(mysqli_num_rows(mysqli_query($con, $check_duplicate)) > 0){
+         header("location:already.php"); // Already scanned for THIS session
+         exit();
+    }
+
+    // 5. INSERT RECORD
+    $insert = "INSERT INTO attendance(s_id, s_name, subject, section, rollno, date, status) 
+               VALUES('$s_id','$s_name','$subject','$section','$roll_no','$now', '$status')";
+
+    if(mysqli_query($con, $insert)){
+         echo "<script>alert('$msg'); window.location.href='success.php';</script>";
+    }
+
 } else {
-    $status = "Present";
-}
-
-// Save to Database with Status
-$query = "INSERT INTO attendance(s_id, s_name, subject, section, rollno, date, status) 
-          VALUES('$s_id','$s_name','$subject','$section','$roll_no','$qr_date_str', '$status')";
-
-try{
-  $result = mysqli_query($con, $query);
-  header("location:success.php");
-}
-catch(mysqli_sql_exception $e){
-  // Duplicate entry (Student already scanned for this specific class time)
-  header("location:already.php");
+    echo "<script>alert('Invalid Session ID'); window.location.href='sc_qr.php';</script>";
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Dashboard</title>
-  <link rel="stylesheet" href="student.css" />
-  <link rel="icon" type="image/x-icon" href="../favicon.ico">
-  <style>
-    a {
-      text-decoration: none;
-      color: black;
-    }
-    .msg{
-      color: green;
-    }
-  </style>
+  <title>Processing...</title>
 </head>
-
 <body>
-  <main>
-    <?php $title = 'Scan-and-Go';
-    $username = $_SESSION['student_name'];
-    include "../componets/header.php" ?>
-    <div class="container">
-      <h1 class="msg">Attendance Registered</h1>
-    </div>
-  </main>
-  <script>
-    var show = 0;
-    function showBox() {
-      box = document.getElementById('box');
-      if (show == 0) {
-        box.style.height = "100px";
-        show = 1;
-      } else {
-        box.style.height = "0px";
-        show = 0;
-      }
-    }
-  </script>
+  Processing Attendance...
 </body>
-
 </html>

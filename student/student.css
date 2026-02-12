@@ -28,7 +28,7 @@ body {
     flex-direction: column;
 }
 
-/* --- Layout Utility Classes --- */
+
 main {
     width: 100%;
     max-width: 1200px;
@@ -37,16 +37,16 @@ main {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: flex-start; /* Changed to flex-start for dashboard layouts */
+    align-items: flex-start; 
     min-height: 100vh;
 }
 
-/* Center content specifically for login/landing */
+
 body.login-page main {
     align-items: center;
 }
 
-/* --- Header & Navigation --- */
+
 .header {
     height: 70px;
     width: 100%;
@@ -91,7 +91,7 @@ body.login-page main {
     color: var(--text-color);
 }
 
-/* Profile Dropdown (The "box") */
+
 #box {
     position: absolute;
     top: 80px;
@@ -101,7 +101,7 @@ body.login-page main {
     border-radius: var(--radius);
     box-shadow: var(--shadow);
     padding: 10px;
-    display: none; /* Controlled by JS */
+    display: none; 
     flex-direction: column;
     z-index: 101;
     animation: fadeIn 0.2s ease-in-out;
@@ -127,7 +127,7 @@ body.login-page main {
     color: var(--primary-color);
 }
 
-/* --- Landing & Register Page Styling --- */
+
 .landing-wrapper {
     display: flex;
     flex-wrap: wrap;
@@ -135,7 +135,7 @@ body.login-page main {
     align-items: center;
     width: 100%;
     gap: 40px;
-    margin-top: 60px; /* Offset for header if present, or general spacing */
+    margin-top: 60px; 
 }
 
 .left, .right {
@@ -237,11 +237,11 @@ body.login-page main {
     transform: translateY(-2px);
 }
 
-/* --- Student Scanner & Status Pages --- */
+
 .container {
     width: 100%;
     max-width: 800px;
-    margin-top: 100px; /* Below header */
+    margin-top: 100px;
     padding: 20px;
 }
 
@@ -274,7 +274,7 @@ body.login-page main {
     padding: 10px;
 }
 
-/* Override html5-qrcode styles */
+
 #my-qr-reader button {
     padding: 10px 20px;
     background-color: var(--primary-color);
@@ -296,7 +296,7 @@ body.login-page main {
     display: block;
 }
 
-/* --- Responsive Media Queries --- */
+
 @media (max-width: 768px) {
     .header {
         padding: 0 15px;

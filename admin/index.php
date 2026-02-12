@@ -1,5 +1,35 @@
 <?php
-    session_start();
+session_start();
+$con = mysqli_connect("localhost", "root", "", "qr_ats");
+
+
+
+if(isset($_POST["login"])) {
+    $email = $_POST['email'];
+    $pass = $_POST['pass'];
+    
+    $query = "select * from admin where email='$email' and pass='$pass'";
+    $result = mysqli_query($con,$query);
+
+    if(mysqli_num_rows($result) <= 0){
+       
+        echo "<script>
+                alert('Invalid Admin Credentials');
+                window.location.href='index.php';
+              </script>";
+        exit();
+    } else {
+        $row = mysqli_fetch_assoc($result);
+        $_SESSION['admin_name'] = $row['name'];
+        $_SESSION['admin_email'] = $row['email'];
+        
+        echo "<script>
+                alert('Admin Login Successful!');
+                window.location.href='dashboard.php';
+              </script>";
+        exit();
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -9,7 +39,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Admin Login</title>
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="icon" type="image/x-icon" href="../favicon.ico">
     <link rel="shortcut icon" href="../resources/img/Attendance System.png" type="image/x-icon">
 </head>
 <body class="login-page">
@@ -46,24 +75,3 @@
     </main>
 </body>
 </html>
-
-<?php
-if(isset($_POST["login"]))
-{
-    $email = $_POST['email'];
-    $pass = $_POST['pass'];
-    $con = mysqli_connect("localhost", "root", "", "qr_ats");
-    $query = "select * from admin where email='$email' and pass='$pass'";
-    $result = mysqli_query($con,$query);
-
-    if(mysqli_num_rows($result) <= 0){
-        echo "<script>alert('Invalid Admin Credentials');</script>";
-    }
-    else{
-        $row = mysqli_fetch_assoc($result);
-        $_SESSION['admin_name'] = $row['name'];
-        $_SESSION['admin_email'] = $row['email'];
-        header("location:dashboard.php");
-    }
-}
-?>

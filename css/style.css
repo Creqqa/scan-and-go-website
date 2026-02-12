@@ -14,7 +14,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Poppins", sans-serif; /* Changed font for modern look */
+    font-family: "Poppins", sans-serif;
 }
 
 body {
@@ -25,7 +25,7 @@ body {
     flex-direction: column;
 }
 
-/* --- Layout Utility Classes --- */
+
 main {
     width: 100%;
     max-width: 1200px;
@@ -35,10 +35,10 @@ main {
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* Centers content vertically on login pages */
+    min-height: 100vh;
 }
 
-/* --- Landing & Register Page Styling --- */
+
 .landing-wrapper {
     display: flex;
     flex-wrap: wrap;
@@ -49,12 +49,12 @@ main {
 }
 
 .left, .right {
-    flex: 1 1 350px; /* Responsive flex basis */
+    flex: 1 1 350px;
     max-width: 500px;
     padding: 20px;
 }
 
-/* Left Section (Branding) */
+
 .left {
     text-align: center;
     display: flex;
@@ -78,7 +78,7 @@ main {
     filter: drop-shadow(0 10px 10px rgba(0,0,0,0.1));
 }
 
-/* Right Section (Form) */
+
 .right form {
     background: var(--white);
     padding: 40px;
@@ -95,8 +95,7 @@ main {
     text-align: center;
 }
 
-/* Form Elements */
-/* --- New Role Selection Styling --- */
+
 .role-selection {
     display: flex;
     justify-content: center;
@@ -106,16 +105,14 @@ main {
 }
 
 .role-option {
-    flex: 1; /* Makes them split width evenly */
+    flex: 1;
     max-width: 150px;
 }
 
-/* Hide the default radio button circle completely */
 .role-option input[type="radio"] {
     display: none;
 }
 
-/* The clickable card design */
 .role-card {
     display: flex;
     flex-direction: column;
@@ -158,9 +155,8 @@ main {
     font-size: 0.9rem;
 }
 
-/* --- Hover Effects --- */
 .role-card:hover {
-    border-color: #ffcccc; /* Light red border on hover */
+    border-color: #ffcccc;
     transform: translateY(-2px);
 }
 
@@ -168,10 +164,9 @@ main {
     transform: scale(1.1);
 }
 
-/* --- SELECTED State (When clicked) --- */
 .role-option input[type="radio"]:checked + .role-card {
     border-color: var(--primary-color);
-    background-color: #fff5f5; /* Very light red background */
+    background-color: #fff5f5;
     box-shadow: 0 4px 12px rgba(255, 75, 75, 0.2);
 }
 
@@ -180,7 +175,7 @@ main {
 }
 
 .role-option input[type="radio"]:checked + .role-card .icon-box img {
-    filter: brightness(0) invert(1); /* Turns icon white */
+    filter: brightness(0) invert(1);
     opacity: 1;
 }
 
@@ -189,26 +184,6 @@ main {
     font-weight: 700;
 }
 
-/* Mobile Responsiveness */
-@media (max-width: 480px) {
-    .role-selection {
-        gap: 10px;
-    }
-    
-    .role-card {
-        padding: 10px;
-    }
-    
-    .icon-box {
-        width: 40px;
-        height: 40px;
-    }
-    
-    .icon-box img {
-        width: 20px;
-        height: 20px;
-    }
-}
 
 .input_area {
     position: relative;
@@ -227,7 +202,7 @@ main {
 
 .input_area input, .input_area select {
     width: 100%;
-    padding: 15px 15px 15px 45px; /* Space for icon */
+    padding: 15px 15px 15px 45px;
     border: none;
     background: transparent;
     font-size: 1rem;
@@ -280,7 +255,7 @@ main {
     text-decoration: underline;
 }
 
-/* --- Admin / Dashboard Styles (Preserved & Modernized) --- */
+
 .header {
     height: 60px;
     width: 100%;
@@ -300,7 +275,7 @@ main {
     height: 100vh;
     width: 60px;
     position: fixed;
-    top: 60px; /* Below header */
+    top: 60px;
     left: 0;
     background: var(--white);
     box-shadow: var(--shadow);
@@ -339,10 +314,10 @@ main {
     margin-right: 20px;
 }
 
-/* Dashboard Container */
+
 .container {
-    margin-top: 80px; /* Header height + spacing */
-    margin-left: 80px; /* Sidebar width + spacing */
+    margin-top: 80px;
+    margin-left: 80px;
     width: calc(100% - 100px);
     padding: 20px;
 }
@@ -385,10 +360,11 @@ td {
     border-bottom: 1px solid #eee;
 }
 
-/* --- Mobile Responsiveness --- */
+
 @media (max-width: 768px) {
+
     .left {
-        display: none; /* Hide hero image on small screens to save space */
+        display: none;
     }
 
     .right {
@@ -397,22 +373,27 @@ td {
     
     .right form {
         padding: 30px 20px;
-        box-shadow: none; /* Flat look on mobile */
+        box-shadow: none;
         border-top: none;
         background: transparent;
     }
 
-    /* Dashboard mobile fixes */
+    
+    .sidebar {
+        width: 60px !important; 
+        position: fixed;
+        top: 60px;
+        left: 0;
+    }
+
+    
     .container {
-        margin-left: 0;
-        width: 100%;
+        margin-left: 60px !important; 
+        width: calc(100% - 60px) !important;
         padding: 10px;
     }
     
-    .sidebar {
-        width: 0; /* Hidden by default or requires toggle */
-    }
-    
+   
     table {
         display: block;
         overflow-x: auto;

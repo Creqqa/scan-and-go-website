@@ -1,27 +1,38 @@
 <?php
 session_start();
-
-$email = $_POST['email'];
-$pass = $_POST['password'];
 $con = mysqli_connect("localhost", "root", "", "qr_ats");
-$query = "select * from teacher where email='$email' and password='$pass'";
-$result = mysqli_query($con, $query);
 
-$row = mysqli_fetch_assoc($result);
+// 1. Check if form was submitted
+if(isset($_POST['email'])) {
+    $email = $_POST['email'];
+    $pass = $_POST['password'];
 
-if (mysqli_num_rows($result) <= 0) {
-  echo "<script>
-        alert('Invalid Credentials. Please try again.')
-        location.href='../index.php'
-    </script>";
-} else {
-  $_SESSION['teacher_name'] = $row['name'];
-  $_SESSION['teacher_email'] = $row['email'];
-  $_SESSION['subject'] = $row['subject'];
-  // Set the success flag
-  $_SESSION['login_success'] = true;
+    $query = "select * from teacher where email='$email' and password='$pass'";
+    $result = mysqli_query($con, $query);
+
+    if (mysqli_num_rows($result) <= 0) {
+        // ERROR: Redirect with error flag
+        header("location: ../index.php?error=invalid");
+        exit(); 
+    } else {
+        // SUCCESS
+        $row = mysqli_fetch_assoc($result);
+        
+        // --- CRITICAL FIX: Save the ID ---
+        $_SESSION['teacher_id'] = $row['id']; 
+        
+        $_SESSION['teacher_name'] = $row['name'];
+        $_SESSION['teacher_email'] = $row['email'];
+        $_SESSION['subject'] = $row['subject'];
+        
+        $_SESSION['login_success'] = true; 
+
+        header("location:gen_qr.php");
+        exit();
+    }
 }
 
+// 2. Direct Access Redirect
 if (!isset($_SESSION["teacher_name"])) {
   header("location:../index.php");
 } else {

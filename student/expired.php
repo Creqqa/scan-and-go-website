@@ -28,9 +28,9 @@ if (!isset($_SESSION["student_name"])) {
   <main>
     <div class="container">
       <div class="status-card error">
-        <span class="status-icon">⌛</span>
+        <span class="status-icon"></span>
         <h1 class="msg-error">QR Code Expired</h1>
-        <p>This QR code is no longer valid (older than 5 minutes). Please ask your teacher to refresh it.</p>
+        <p>This QR code is no longer valid.</p>
         <a href="sc_qr.php" class="button_submit" style="display:inline-block; width: auto; padding: 10px 30px; margin-top: 20px; text-decoration: none;">Try Again</a>
       </div>
     </div>

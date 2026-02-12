@@ -1,4 +1,4 @@
-<nav class="sidebar">
+<nav class="sidebar" id="mySidebar">
     <li title="Dashboard">
         <a href="dashboard.php"><img src="../resources/icons/Graph.svg" /> <span>Dashboard</span></a>
     </li>

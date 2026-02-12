@@ -1,28 +1,35 @@
 <?php
 session_start();
-
-$email = $_POST['email'];
-$pass = $_POST['password'];
 $con = mysqli_connect("localhost", "root", "", "qr_ats");
-$query = "select * from student where email='$email' and password='$pass'";
-$result = mysqli_query($con, $query);
 
-$row = mysqli_fetch_assoc($result);
 
-if (mysqli_num_rows($result) <= 0) {
-  echo "<script>
-            alert('Invalid Credentials. Please try again.')
-            location.href='../index.php'
-        </script>";
-} else {
-  $_SESSION['id'] = $row['id'];
-  $_SESSION['student_name'] = $row['name'];
-  $_SESSION['student_email'] = $row['email'];
-  $_SESSION['rollno'] = $row['roll_no'];
-  $_SESSION['section'] = $row['section'];
-  // Set the success flag
-  $_SESSION['login_success'] = true;
+
+
+
+if(isset($_POST['email'])) {
+    $email = $_POST['email'];
+    $pass = $_POST['password'];
+
+    $query = "select * from student where email='$email' and password='$pass'";
+    $result = mysqli_query($con, $query);
+
+    if (mysqli_num_rows($result) <= 0) {
+        header("location: ../index.php?error=invalid");
+        exit(); 
+    } else {
+        $row = mysqli_fetch_assoc($result);
+        $_SESSION['id'] = $row['id'];
+        $_SESSION['student_name'] = $row['name'];
+        $_SESSION['student_email'] = $row['email'];
+        $_SESSION['rollno'] = $row['roll_no'];
+        $_SESSION['section'] = $row['section'];
+        
+        $_SESSION['login_success'] = true; 
+        header("location:sc_qr.php");
+        exit();
+    }
 }
+
 
 if (!isset($_SESSION["student_name"])) {
   header("location:../index.php");

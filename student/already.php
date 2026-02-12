@@ -28,7 +28,7 @@ if (!isset($_SESSION["student_name"])) {
   <main>
     <div class="container">
       <div class="status-card warning">
-        <span class="status-icon">🤦‍♂️</span>
+        <span class="status-icon">⚠️</span>
         <h1 style="color: #f39c12;">Already Registered</h1>
         <p>You have already scanned in for this session.</p>
         <a href="sc_qr.php" class="button_submit" style="display:inline-block; width: auto; padding: 10px 30px; margin-top: 20px; text-decoration: none;">Back to Scanner</a>

@@ -24,7 +24,7 @@
         <div class="landing-wrapper">
              <section class="left">
                 <div class="logo">
-                    <h2>Admin Panel</h2>
+                    <h2>Admin</h2>
                 </div>
                 <img src="../resources/img/img1.gif" alt="">
             </section>

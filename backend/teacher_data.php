@@ -1,5 +1,4 @@
 <?php
-// Enable error reporting
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 $con = mysqli_connect("localhost", "root", "", "qr_ats");
 
@@ -18,7 +17,6 @@ try {
     if (mysqli_query($con, $query)) {
         $status = "success";
         $message = "Teacher registered successfully!";
-        // Redirect to Admin Panel since admin usually adds teachers
         $action_button = '<a href="../admin/teacher.php" class="button_submit" style="text-decoration:none; display:inline-block; width:auto; padding: 10px 30px;">Return to Dashboard</a>';
     }
 

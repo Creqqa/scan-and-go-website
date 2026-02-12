@@ -32,7 +32,7 @@ if (!isset($_SESSION["student_name"])) {
         <span class="status-icon">🎉</span>
         <h1 class="msg-success">Attendance Registered!</h1>
         <p>Your attendance has been successfully recorded.</p>
-        <a href="sc_qr.php" class="button_submit" style="display:inline-block; width: auto; padding: 10px 30px; margin-top: 20px; text-decoration: none;">Scan Another</a>
+        <a href="sc_qr.php" class="button_submit" style="display:inline-block; width: auto; padding: 10px 30px; margin-top: 20px; text-decoration: none;">Back to Dashboard</a>
       </div>
     </div>
   </main>

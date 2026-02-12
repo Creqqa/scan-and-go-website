@@ -1,35 +1,45 @@
 <?php
 session_start();
 
-// 1. Security Check
+
 if (!isset($_SESSION["student_name"])) {
   header("location:../index.php");
   exit();
 }
 
-// 2. Database Connection
 $con = mysqli_connect("localhost", "root", "", "qr_ats");
-if (!$con) {
-    die("Connection failed: " . mysqli_connect_error());
+
+if (mysqli_connect_errno()) {
+    die("Failed to connect to MySQL: " . mysqli_connect_error());
 }
 
 $rollno = $_SESSION['rollno'];
 
-// 3. Fetch History
+
 $query = "SELECT * FROM attendance WHERE rollno='$rollno' ORDER BY date DESC";
 $result = mysqli_query($con, $query);
 
-// 4. Calculate Stats
-$total_present = mysqli_num_rows($result);
-$last_present = "N/A";
+$count_present = 0;
+$count_late = 0;
+$count_absent = 0;
+$total_records = mysqli_num_rows($result);
 
-// Fetch the first row to get the "Last Active" date, then reset the pointer
-if($total_present > 0) {
-    $first_row = mysqli_fetch_assoc($result);
-    $dateObj = date_create($first_row["date"]);
-    $last_present = date_format($dateObj, "M d");
-    mysqli_data_seek($result, 0); // Reset so the table loop below works
+
+while($row = mysqli_fetch_assoc($result)) {
+    
+    $status = isset($row['status']) && $row['status'] != '' ? $row['status'] : 'Present';
+    
+    if($status == 'Present') {
+        $count_present++;
+    } elseif($status == 'Late') {
+        $count_late++;
+    } elseif($status == 'Absent') {
+        $count_absent++;
+    }
 }
+
+
+mysqli_data_seek($result, 0); 
 ?>
 
 <!DOCTYPE html>
@@ -37,125 +47,67 @@ if($total_present > 0) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>My History</title>
+  <title>Attendance History</title>
+  <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="student.css" />
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <style>
-      /* --- Page Specific Styles --- */
-      
-      /* Stats Grid */
       .stats-container {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: 20px;
+          grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+          gap: 15px;
           margin-bottom: 30px;
           width: 100%;
       }
 
       .stat-card {
           background: white;
-          padding: 20px;
+          padding: 15px;
           border-radius: var(--radius);
           box-shadow: var(--shadow);
           display: flex;
           align-items: center;
-          gap: 20px;
-          border-left: 5px solid var(--primary-color);
+          gap: 10px;
+          border-left: 5px solid #ccc;
           transition: transform 0.2s;
       }
       
-      .stat-card:hover {
-          transform: translateY(-5px);
-      }
+      .stat-card:hover { transform: translateY(-3px); }
+
+      /* Specific Colors for Cards */
+      .stat-card.present { border-left-color: #2ecc71; }
+      .stat-card.late { border-left-color: #f1c40f; }
+      .stat-card.absent { border-left-color: #e74c3c; }
 
       .stat-icon {
-          width: 50px;
-          height: 50px;
-          background: #ffe5e5;
+          width: 35px; height: 35px;
           border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 1.5rem;
-          color: var(--primary-color);
+          display: flex; align-items: center; justify-content: center;
+          font-size: 1rem;
+          font-weight: bold;
       }
 
-      .stat-info h3 {
-          font-size: 2rem;
-          margin: 0;
-          color: var(--text-color);
-      }
+      .stat-info h3 { font-size: 1.2rem; margin: 0; color: var(--text-color); }
+      .stat-info p { color: #666; font-size: 0.8rem; margin: 0; }
 
-      .stat-info p {
-          color: #666;
-          font-size: 0.9rem;
-          margin: 0;
-      }
-
-      /* Search Bar */
+      /* Search & Table */
       .search-box {
-          position: relative;
-          width: 100%;
-          max-width: 400px;
-          margin-bottom: 20px;
+          position: relative; width: 100%; max-width: 400px; margin-bottom: 20px;
       }
-      
       .search-box input {
-          width: 100%;
-          padding: 15px 15px 15px 45px;
-          border-radius: 30px;
-          border: 1px solid #ddd;
-          outline: none;
-          transition: all 0.3s;
-          box-shadow: var(--shadow);
+          width: 100%; padding: 12px 12px 12px 40px;
+          border-radius: 30px; border: 1px solid #ddd; outline: none;
       }
-
-      .search-box input:focus {
-          border-color: var(--primary-color);
-          box-shadow: 0 0 0 3px rgba(255, 75, 75, 0.1);
-      }
-
       .search-icon {
-          position: absolute;
-          left: 15px;
-          top: 50%;
-          transform: translateY(-50%);
-          opacity: 0.5;
-      }
-
-      /* Table Enhancements */
-      tr {
-          transition: background 0.2s;
+          position: absolute; left: 15px; top: 50%; transform: translateY(-50%); opacity: 0.5;
       }
       
-      tr:hover td {
-          background-color: #fef2f2; /* Light red hover */
-      }
-      
-      /* Status Badges */
       .badge {
-          padding: 5px 12px;
-          border-radius: 20px;
-          font-weight: 600;
-          font-size: 0.85rem;
-          display: inline-flex;
-          align-items: center;
-          gap: 5px;
-          color: white;
+          padding: 5px 12px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; color: white;
       }
       .badge.success { background-color: #2ecc71; }
       .badge.warning { background-color: #f1c40f; }
       .badge.danger { background-color: #e74c3c; }
-
-      /* Animation for rows */
-      @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-      }
-
-      tbody tr {
-          animation: fadeIn 0.3s ease-in-out;
-      }
   </style>
 </head>
 
@@ -174,18 +126,27 @@ if($total_present > 0) {
         <div class="container">
             
             <div class="stats-container">
-                <div class="stat-card">
-                    <div class="stat-icon">📊</div>
+                <div class="stat-card present">
+                    <div class="stat-icon" style="background: #e8f5e9; color: #2ecc71;">P</div>
                     <div class="stat-info">
-                        <h3><?php echo $total_present; ?></h3>
-                        <p>Total Records</p>
+                        <h3><?php echo $count_present; ?></h3>
+                        <p>Present</p>
                     </div>
                 </div>
-                <div class="stat-card" style="border-left-color: #2ecc71;">
-                    <div class="stat-icon" style="background: #e8f5e9; color: #2ecc71;">🕒</div>
+
+                <div class="stat-card late">
+                    <div class="stat-icon" style="background: #fef9e7; color: #f1c40f;">L</div>
                     <div class="stat-info">
-                        <h3><?php echo $last_present; ?></h3>
-                        <p>Last Activity</p>
+                        <h3><?php echo $count_late; ?></h3>
+                        <p>Late</p>
+                    </div>
+                </div>
+
+                <div class="stat-card absent">
+                    <div class="stat-icon" style="background: #fceceb; color: #e74c3c;">A</div>
+                    <div class="stat-info">
+                        <h3><?php echo $count_absent; ?></h3>
+                        <p>Absent</p>
                     </div>
                 </div>
             </div>
@@ -213,25 +174,21 @@ if($total_present > 0) {
                         </thead>
                         <tbody>
                         <?php
-                            if($total_present > 0){
+                            if($total_records > 0){
                                 while($row = mysqli_fetch_assoc($result)){
                                     // DATE FORMATTING
                                     $dateObj = date_create($row["date"]);
                                     $formattedDate = date_format($dateObj, "M d, Y h:i A");
                                     
-                                    // STATUS LOGIC (Inside the loop!)
-                                    // Check if status exists in DB, otherwise default to Present
-                                    $status = isset($row['status']) ? $row['status'] : 'Present';
+                                    // STATUS LOGIC
+                                    $status = isset($row['status']) && $row['status'] != '' ? $row['status'] : 'Present';
                                     
                                     $badgeClass = 'success'; // Green
-                                    $icon = '●';
                                     
                                     if($status == 'Late') { 
                                         $badgeClass = 'warning'; // Orange
-                                        $icon = '⏱';
                                     } elseif($status == 'Absent') { 
                                         $badgeClass = 'danger'; // Red
-                                        $icon = '✖';
                                     }
 
                                     echo "<tr>
@@ -239,9 +196,7 @@ if($total_present > 0) {
                                         <td style='color: #666;'>".$formattedDate."</td>
                                         <td>".htmlspecialchars($row["section"])."</td>
                                         <td>
-                                            <span class='badge $badgeClass'>
-                                                <span>$icon</span> $status
-                                            </span>
+                                            <span class='badge $badgeClass'>$status</span>
                                         </td>
                                     </tr>";
                                 }
@@ -260,20 +215,12 @@ if($total_present > 0) {
     </main>
 
   <script>
-    // Toggle Profile Dropdown
     function showBox() {
-      document.getElementById('box').classList.toggle('active');
+      let box = document.getElementById('box');
+      box.classList.toggle('active');
     }
-    
-    document.addEventListener('click', function(event) {
-        const profile = document.querySelector('.profile');
-        const box = document.getElementById('box');
-        if (profile && !profile.contains(event.target) && !box.contains(event.target)) {
-            box.classList.remove('active');
-        }
-    });
 
-    // INTERACTIVE: Search Filter Logic
+    // Search Filter Logic
     function filterTable() {
       var input, filter, table, tr, td, i, txtValue;
       input = document.getElementById("searchInput");

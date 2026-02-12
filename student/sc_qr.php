@@ -12,6 +12,7 @@ if (!isset($_SESSION["student_name"])) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Scan QR</title>
+  <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="student.css" />
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
 </head>
@@ -33,7 +34,7 @@ if (!isset($_SESSION["student_name"])) {
     <div class="container">
       <div class="scanner-card">
         <h1>Scan Attendance QR</h1>
-        <p style="margin-bottom: 20px; color: #666;">Please allow camera access to scan the teacher's QR code.</p>
+        <p style="margin-bottom: 20px; color: #666;">Scan the specific subject QR code.</p>
         
         <div id="my-qr-reader"></div>
         
@@ -48,7 +49,6 @@ if (!isset($_SESSION["student_name"])) {
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <script>
-    // --- LOGIN SUCCESS POPUP LOGIC ---
     <?php if(isset($_SESSION['login_success'])): ?>
         Swal.fire({
             icon: 'success',
@@ -62,13 +62,11 @@ if (!isset($_SESSION["student_name"])) {
         <?php unset($_SESSION['login_success']); ?>
     <?php endif; ?>
 
-    // Toggle Profile Dropdown
     function showBox() {
       let box = document.getElementById('box');
       box.classList.toggle('active');
     }
 
-    // QR Code Logic
     function domReady(fn) {
       if (document.readyState === "complete" || document.readyState === "interactive") {
         setTimeout(fn, 1000);
@@ -80,28 +78,27 @@ if (!isset($_SESSION["student_name"])) {
     domReady(function () {
       function onScanSuccess(decodeText, decodeResult) { 
         try {
+            // 1. Parse QR Data
             let qr_info = JSON.parse(decodeText);
-            let current_date = new Date();
-            let qr_date = new Date(qr_info.date);
             
-            // Calculate time difference in minutes
-            let time_difference = (current_date.getTime() - qr_date.getTime()) / (1000 * 60);
-
-            // UPDATED LOGIC: Allow up to 120 mins (2 hours) so late/absent students can still scan
-            if(time_difference < 120) {
-                window.location.href = "scan_qr.php?s_id=<?php echo $_SESSION['id'];?>&s_name=<?php echo $_SESSION['student_name'];?>&rollno=<?php echo $_SESSION['rollno'];?>&section=<?php echo $_SESSION['section']; ?>&subject=" + qr_info.subject + "&date=" + qr_info.date;
+            // 2. Check for SESSION ID (The new format)
+            if(qr_info.session_id) {
+                // Redirect to backend with Session ID
+                // We don't calculate time here anymore. The SERVER does it for security.
+                window.location.href = "scan_qr.php?session_id=" + qr_info.session_id;
             } else {
-                window.location.href = "expired.php";
+                 Swal.fire({
+                    icon: 'error',
+                    title: 'Old QR Code',
+                    text: 'This QR code format is outdated. Please ask teacher to regenerate.',
+                });
             }
         } catch (e) {
             alert("Invalid QR Code format.");
         }
       }
 
-      let htmlscanner = new Html5QrcodeScanner(
-        "my-qr-reader",
-        { fps: 10, qrbos: 250 }
-      );
+      let htmlscanner = new Html5QrcodeScanner("my-qr-reader", { fps: 10, qrbos: 250 });
       htmlscanner.render(onScanSuccess);
     });
   </script>
