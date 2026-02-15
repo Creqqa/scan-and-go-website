@@ -47,7 +47,7 @@ mysqli_data_seek($result, 0);
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Attendance History</title>
+  <title>Attendance Record</title>
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="stylesheet" href="student.css" />
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
@@ -112,7 +112,7 @@ mysqli_data_seek($result, 0);
 </head>
 
 <body>
-    <?php $title = 'Attendance Record';
+    <?php $title = 'Scan-and-Go';
     $username = $_SESSION['student_name'];
     include "../componets/header.php"; ?>
     

@@ -149,7 +149,7 @@ $sec_result = mysqli_query($con, $sec_query);
 
 <body>
   <?php 
-    $title = 'Teacher Dashboard';
+    $title = 'Scan-and-Go | Teacher Dashboard';
     $username = $_SESSION['teacher_name'];
     include "../componets/header.php"; 
   ?>

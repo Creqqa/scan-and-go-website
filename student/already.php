@@ -10,7 +10,7 @@ if (!isset($_SESSION["student_name"])) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Already Registered</title>
+  <title>Already Scan this QR Code</title>
   <link rel="stylesheet" href="student.css" />
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
 </head>
@@ -28,8 +28,8 @@ if (!isset($_SESSION["student_name"])) {
   <main>
     <div class="container">
       <div class="status-card warning">
-        <span class="status-icon">⚠️</span>
-        <h1 style="color: #f39c12;">Already Registered</h1>
+        <span class="status-icon"></span>
+        <h1 style="color: #f39c12;">Already Scan This QR Code</h1>
         <p>You have already scanned in for this session.</p>
         <a href="sc_qr.php" class="button_submit" style="display:inline-block; width: auto; padding: 10px 30px; margin-top: 20px; text-decoration: none;">Back to Scanner</a>
       </div>

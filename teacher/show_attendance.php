@@ -93,7 +93,7 @@ $selected_section = isset($_GET['section']) ? $_GET['section'] : null;
 
 <body>
     <?php 
-    $title = 'Attendance Records';
+    $title = 'Scan-and-Go';
     $username = $_SESSION['teacher_name'];
     include "../componets/header.php"; 
     ?>
@@ -212,7 +212,7 @@ $selected_section = isset($_GET['section']) ? $_GET['section'] : null;
 
                                             <td style='text-align: right;'>
                                                 <a href='details.php?sub=".urlencode($subject)."&roll=".urlencode($row['roll_no'])."' style='color: var(--primary-color); font-weight:600; text-decoration: none; font-size: 0.9rem;'>
-                                                    View Log &rarr;
+                                                    View Record &rarr;
                                                 </a>
                                             </td>
                                         </tr>";

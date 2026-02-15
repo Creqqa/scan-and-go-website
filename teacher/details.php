@@ -98,7 +98,7 @@ while($row = mysqli_fetch_assoc($result)){
 <body>
     <?php 
     // UPDATED TITLE TO INCLUDE BRANDING
-    $title = 'Scan-and-Go | Student History';
+    $title = 'Scan-and-Go';
     $username = $_SESSION['teacher_name'];
     include "../componets/header.php"; 
     ?>
@@ -112,7 +112,7 @@ while($row = mysqli_fetch_assoc($result)){
             
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
                 <div>
-                    <h2 style="color: var(--text-color); margin: 0;">Detailed Logs</h2>
+                    <h2 style="color: var(--text-color); margin: 0;">Attendance Record</h2>
                     <p style="color: #666; margin-top: 5px;">
                         Student: <strong><?php echo htmlspecialchars($student_name); ?></strong><br>
                         Section: <strong><?php echo htmlspecialchars($student_section); ?></strong> &nbsp;|&nbsp; LRN: <?php echo htmlspecialchars($rollno); ?>

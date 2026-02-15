@@ -19,7 +19,7 @@ if (!isset($_SESSION["student_name"])) {
 
 <body>
   <?php 
-    $title = 'Student Dashboard';
+    $title = 'Scan-and-Go';
     $username = $_SESSION['student_name'];
     include "../componets/header.php"; 
   ?>
@@ -39,7 +39,7 @@ if (!isset($_SESSION["student_name"])) {
         <div id="my-qr-reader"></div>
         
         <a href="history.php" class="button_submit" style="background-color: transparent; border: 1px solid var(--primary-color); color: var(--primary-color); margin-top: 20px; display: block; text-decoration: none;">
-            View My Attendance History
+            View My Attendance Record
         </a>
       </div>
     </div>
