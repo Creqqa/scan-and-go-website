@@ -112,7 +112,7 @@ mysqli_data_seek($result, 0);
 </head>
 
 <body>
-    <?php $title = 'Attendance Log';
+    <?php $title = 'Attendance Record';
     $username = $_SESSION['student_name'];
     include "../componets/header.php"; ?>
     

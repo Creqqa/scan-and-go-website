@@ -212,7 +212,7 @@ $sec_result = mysqli_query($con, $sec_query);
                         <input type="number" name="late_minutes" class="form-control" value="15" min="1" required>
                     </div>
                     <div class="form-group">
-                        <label>Absent/Expire after:</label>
+                        <label>Absent/Expire after(mins):</label>
                         <input type="number" name="absent_minutes" class="form-control" value="60" min="5" required>
                     </div>
                 </div>
@@ -225,12 +225,12 @@ $sec_result = mysqli_query($con, $sec_query);
         <?php else: ?>
             <div id="control-buttons">
                 <button type="button" onclick="window.print()" class="button_submit" style="background-color: #34495e; margin-bottom: 10px;">
-                    🖨️ Print QR Code
+                    Print QR Code
                 </button>
 
                 <form method="post" onsubmit="return confirm('End Class? Students who have not scanned will be marked ABSENT automatically.');">
                     <button type="submit" name="end_class_btn" class="button_submit" style="background-color: #e74c3c;">
-                        End Class & Finalize Attendance
+                        End Class
                     </button>
                 </form>
             </div>
@@ -255,7 +255,7 @@ $sec_result = mysqli_query($con, $sec_query);
 
     function showBox() { document.getElementById('box').classList.toggle('active'); }
     
-    // --- QR RENDER LOGIC ---
+    
     <?php if ($has_active_qr): ?>
         var qrData = JSON.stringify({ 
             session_id: "<?php echo $active_session_data['id']; ?>",

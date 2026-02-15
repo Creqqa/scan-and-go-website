@@ -71,7 +71,7 @@ try {
 <body>
     <div class="status-card <?php echo $status; ?>">
         <?php if($status == 'success'): ?>
-            <span class="icon">🎉</span>
+            <span class="icon"></span>
             <h2 style="color: #2ecc71;">Success!</h2>
         <?php else: ?>
             <span class="icon">⚠️</span>
